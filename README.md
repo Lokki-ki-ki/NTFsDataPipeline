@@ -10,5 +10,9 @@ If don't have gcloud cli, please install and follwoing Local development environ
 ### Step3 - Run the dags test
 `airflow dags test airflow_draft` currently the dag_id is airlflow_draft can you can check the data under gcs/nfts_pipeline_test and bigquery/nfts_pipeline
 
+### Other Tips
+Design of dags pls check https://docs.google.com/document/d/1Cg8LuNmWu1hdsvHbumb2-7xJl61iMut_jWvDCJ_Q3gc/edit
+Things to be improved has been commented as #TODO: which can be detected by vscode extension TODO Tree
+
 
  
