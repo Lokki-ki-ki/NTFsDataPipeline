@@ -57,7 +57,7 @@ with DAG(
         task_id='transform',
         src="/tmp/fetch_transactions_for_collection.csv",
         dst="data/fetch_transactions_for_collection.csv",
-        bucket="nfts_pipeline",
+        bucket="nfts_pipeline_test",
         mime_type="text/csv",
         dag=dag
     )
