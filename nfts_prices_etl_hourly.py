@@ -11,7 +11,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
-from nfts_prices_fetch import FetchData
+from helpers.nfts_prices_fetch import FetchData
 # [END import_module]
 
 # [START define fucntions]
