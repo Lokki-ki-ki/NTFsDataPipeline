@@ -8,7 +8,7 @@
 If don't have gcloud cli, please install and follwoing Local development environmen in the link https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to. Once initiate gcloud successfully, can use `gcloud projects list` and `gcloud config set project nft-dashboard-381202` to set the proj to our current proj.
 
 ### Step3 - Run the dags test
-`airflow dags test airflow_draft` currently the dag_id is airlflow_draft can you can check the data under gcs/nfts_pipeline_test and bigquery/nfts_pipeline
+`airflow dags test nfts_price_etl_hourly` and `airflow dags test nfts_price_etl_daily` currently the dag_id is airlflow_draft can you can check the data under gcs/nfts_pipeline_test and bigquery/nfts_pipeline
 
 ### Other Tips
 Design of dags pls check https://docs.google.com/document/d/1Cg8LuNmWu1hdsvHbumb2-7xJl61iMut_jWvDCJ_Q3gc/edit
