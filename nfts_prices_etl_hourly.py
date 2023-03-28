@@ -4,6 +4,8 @@ This DAG is fetch_data_task >> load_to_gcs_task >> load_data_to_bq_task
 """
 # [START import_module]
 from __future__ import annotations
+import sys
+import os
 from textwrap import dedent
 import pendulum
 import datetime
@@ -11,6 +13,8 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
+# Configure for NoModuleFOund error
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from nfts_prices_fetch import FetchData
 # [END import_module]
 
