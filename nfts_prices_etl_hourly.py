@@ -28,12 +28,13 @@ def fetch_data():
 
 nfts_prices_schema = [
     # TODO: better define the schema
+    # TODO: price will overflow for INTEGER type
     {'name': 'collection_address', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'marketplace', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'token_id', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'seller', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'buyer', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'price', 'type': 'INTEGER', 'mode': 'NULLABLE'},
+    {'name': 'price', 'type': 'NUMERIC', 'mode': 'NULLABLE'},
     {'name': 'price_decimal', 'type': 'INTEGER', 'mode': 'NULLABLE'},
     {'name': 'price_currency', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'protocol_fee', 'type': 'STRING', 'mode': 'NULLABLE'},
@@ -50,8 +51,8 @@ with DAG(
     'nfts_price_etl_hourly',
     default_args={'retries': 2},
     description='DAG draft for group project',
-    schedule=None,
-    start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
+    schedule='0 * * * *',
+    start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
     tags=['example'],
 ) as dag:
