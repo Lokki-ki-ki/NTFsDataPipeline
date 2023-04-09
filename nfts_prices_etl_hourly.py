@@ -3,12 +3,9 @@
 This DAG is fetch_data_task >> load_to_gcs_task >> load_data_to_bq_task
 """
 # [START import_module]
-<<<<<<< Updated upstream
 from __future__ import annotations
-=======
 import sys
 import os
->>>>>>> Stashed changes
 from textwrap import dedent
 import pendulum
 import datetime
