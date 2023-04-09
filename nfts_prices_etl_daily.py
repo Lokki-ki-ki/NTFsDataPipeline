@@ -3,7 +3,7 @@
 This DAG is 
 """
 # [START import_module]
-from __future__ import annotations
+# from __future__ import annotations
 from textwrap import dedent
 import pendulum
 import datetime
@@ -52,7 +52,7 @@ with DAG(
     schedule=None,
     start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
     catchup=False,
-    tags=['example'],
+    tags=['Group Project'],
 ) as dag:
     dag.doc_md = __doc__
     # Fetch data and store in local
