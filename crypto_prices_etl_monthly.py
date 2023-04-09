@@ -13,7 +13,7 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.transfers.gcs_to_gcs import GCSToGCSOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
-from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator
+from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator, BigQueryCreateEmptyDatasetOperator
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from crypto_prices_fetch import FetchData
 # [END import_module]
@@ -83,11 +83,22 @@ with DAG(
     """
     )
 
+    project_id="nft-dashboard-381202"
+    dataset="crypto_pipeline"
+    table="crypto_eth_prices"
+
+    create_bq_dataset_task = BigQueryCreateEmptyDatasetOperator(
+        task_id='create_bq_dataset',
+        project_id=project_id,
+        dataset_id=dataset,
+        dag=dag
+    )
+
     load_data_to_bq_staging_task = GCSToBigQueryOperator(
         task_id='load_to_bq_staging',
         bucket="nfts_pipeline_test",
         source_objects=["crypto/{{ ti.xcom_pull(task_ids='fetch_data') }}"],
-        destination_project_dataset_table="nfts_pipeline.crypto_prices_staging",
+        destination_project_dataset_table=f"{dataset}.crypto_prices_staging",
         source_format="CSV",
         write_disposition="WRITE_TRUNCATE",
         schema_fields=crypto_prices_schema,
@@ -100,13 +111,9 @@ with DAG(
     """
     )
 
-    project_id="nft-dashboard-381202"
-    dataset="nfts_pipeline"
-    table="nfts_pipeline_crypto_prices"
-
     # TODO: wont create new table when there is already one(need double check)
-    create_collection_tables_task = BigQueryCreateEmptyTableOperator(
-        task_id='create_collection_tables',
+    create_crypto_tables_task = BigQueryCreateEmptyTableOperator(
+        task_id='create_crypto_tables',
         project_id=project_id,
         dataset_id=dataset,
         table_id=table,
@@ -155,7 +162,7 @@ with DAG(
     """
     )
 
-    load_data_to_bq_staging_task >> create_collection_tables_task >> load_staging_to_bq_task >> move_current_data_to_archive_task
+    fetch_data_task >> create_bq_dataset_task >> load_data_to_bq_staging_task >> create_crypto_tables_task >> load_staging_to_bq_task >> move_current_data_to_archive_task
     
    
     
