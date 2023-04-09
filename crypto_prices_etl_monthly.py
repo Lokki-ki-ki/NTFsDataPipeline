@@ -129,7 +129,7 @@ with DAG(
             MERGE `{project_id}.{dataset}.{table}` T
             USING (
                 SELECT Open, High, Low, Close, Adj_Close, Volumn, Date, Time, Prev_Close, Simple_Return, Log_Return
-                FROM nfts_pipeline.crypto_prices_staging
+                FROM {dataset}.crypto_prices_staging
                 GROUP BY Open, High, Low, Close, Adj_Close, Volumn, Date, Time, Prev_Close, Simple_Return, Log_Return
             ) S 
             ON S.Open = T.Open AND S.High = T.High AND S.Low = T.Low AND S.Close = T.Close AND S.Adj_Close = T.Adj_Close AND S.Volumn = T.Volumn AND S.Date = T.Date AND S.Time = T.Time AND S.Prev_Close = T.Prev_Close AND S.Simple_Return = T.Simple_Return AND S.Log_Return = T.Log_Return
