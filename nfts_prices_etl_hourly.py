@@ -3,7 +3,12 @@
 This DAG is fetch_data_task >> load_to_gcs_task >> load_data_to_bq_task
 """
 # [START import_module]
+<<<<<<< Updated upstream
 from __future__ import annotations
+=======
+import sys
+import os
+>>>>>>> Stashed changes
 from textwrap import dedent
 import pendulum
 import datetime
@@ -49,7 +54,7 @@ with DAG(
     schedule=None,
     start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
     catchup=False,
-    tags=['example'],
+    tags=['Group Project'],
 ) as dag:
     dag.doc_md = __doc__
     # Fetch data and store in local
