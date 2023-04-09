@@ -54,7 +54,7 @@ with DAG(
     schedule='0 * * * *',
     start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
-    tags=['example'],
+    tags=['Group Project'],
 ) as dag:
     dag.doc_md = __doc__
     # Fetch data and store in local

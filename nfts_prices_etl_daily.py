@@ -3,13 +3,12 @@
 This DAG is 
 """
 # [START import_module]
-from __future__ import annotations
+# from __future__ import annotations
 from textwrap import dedent
 import pendulum
 import datetime
 from airflow import DAG
 from airflow.operators.python import PythonOperator, BranchPythonOperator
-from airflow.operators.empty import EmptyOperator
 from airflow.operators.bash import BashOperator
 from airflow.providers.google.cloud.transfers.gcs_to_gcs import GCSToGCSOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
@@ -35,14 +34,13 @@ nfts_prices_schema = [
 ]
 
 def check_collection_tables():
-    # TODO: check if the tables for the collections are created
     """
     This task checks if the tables for the collections are created
     """
-    if False:
-        return ["table_exists", "load_collection_one_to_bq"]
+    if True:
+        return "create_collection_tables"
     else:
-        return ["table_not_exists", "create_collection_tables", "load_collection_one_to_bq"]
+        return "load_collection_one_to_bq"
 # [END define fucntions]
 
 # [START define dag]
@@ -54,7 +52,7 @@ with DAG(
     schedule='0 0 * * *',
     start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
-    tags=['example'],
+    tags=['Group Project'],
 ) as dag:
     dag.doc_md = __doc__
     # Fetch data and store in local
@@ -79,13 +77,10 @@ with DAG(
     dataset="nfts_pipeline"
     table="nfts_pipeline_collection_one"
 
-    # TODO: wont create new table when there is already one(need double check)
-    create_collection_tables_task = BigQueryCreateEmptyTableOperator(
-        task_id='create_collection_tables',
-        project_id=project_id,
-        dataset_id=dataset,
-        table_id=table,
-        schema_fields=nfts_prices_schema,
+    # load_collection_two_to_bq_task =
+    check_collection_tables_task = BranchPythonOperator(
+        task_id='check_collection_tables',
+        python_callable=check_collection_tables,
         dag=dag
     )
 
@@ -113,7 +108,14 @@ with DAG(
         dag=dag
     )
 
-    # load_collection_three_to_bq_task =
+    create_collection_tables_task = BigQueryCreateEmptyTableOperator(
+        task_id='create_collection_tables',
+        project_id=project_id,
+        dataset_id=dataset,
+        table_id=table,
+        schema_fields=nfts_prices_schema,
+        dag=dag
+    )
 
     # TODO: configure the bucket and path
     # Load data fectched that is stored in local to GCS
