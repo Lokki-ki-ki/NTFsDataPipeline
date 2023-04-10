@@ -13,8 +13,7 @@ class FetchData:
         INPUT: crypto ticker, start date, end date
         OUTPUT: dataframe of crypto prices
         """
-        
-        df = yf.download(crypto_ticker, start_date, end_date, interval='30m')
+        df = yf.download(crypto_ticker, start_date, end_date, interval='1d')
         df = df.apply(lambda x: round(x, 6))
         df['Date'] = df.index.date
         # Timezone is UTC
@@ -33,7 +32,7 @@ class FetchData:
         format='%Y-%m-%d'
         # For interval 30m, we can only fetch data for 60 days
         end_date = datetime.today()
-        start_date = end_date - timedelta(days=30)
+        start_date = end_date - timedelta(days=2000)
         print(start_date, end_date)
         fetch = FetchData()
         df = fetch.fetch_crypto_prices(crypto_ticker, start_date, end_date)
@@ -45,7 +44,7 @@ if __name__ == "__main__":
     format='%Y-%m-%d'
     # For interval 30m, we can only fetch data for 60 days
     end_date = datetime.today()
-    start_date = end_date - timedelta(days=30)
+    start_date = end_date - timedelta(days=2000)
     print(start_date, end_date)
     fetch = FetchData()
     df = fetch.fetch_crypto_prices(crypto_ticker, start_date, end_date)
