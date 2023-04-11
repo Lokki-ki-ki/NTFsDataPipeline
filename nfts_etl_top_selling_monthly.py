@@ -1,5 +1,5 @@
 """
-### NFTs Prices ETL DAG (Hourly)
+### NFTs Top 50 selling contract ETL DAG (Monthly)
 This DAG is fetch_data_task >> load_to_gcs_task >> load_data_to_bq_task
 """
 # [START import_module]
@@ -15,43 +15,33 @@ from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesyste
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 # Configure for NoModuleFOund error
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from nfts_prices_fetch import FetchData
+from nfts_top_selling_fetch import FetchTopSellingNFTs
 # [END import_module]
 
 # [START define fucntions]
 def fetch_data():
-    """
-    This task fetch latest 100 transactions data for several collections from the blockchain
-    """
-    fetch_data = FetchData()
-    fetch_data.fetch_transactions_for_collections()
+    
+    fetch_data = FetchTopSellingNFTs()
+    fetch_data.fetch_nfts("30d")
 
-nfts_prices_schema = [
+nfts_schema = [
     # TODO: better define the schema
     # TODO: price will overflow for INTEGER type
-    {'name': 'collection_address', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'marketplace', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'token_id', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'seller', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'buyer', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'price', 'type': 'NUMERIC', 'mode': 'NULLABLE'},
-    {'name': 'price_decimal', 'type': 'INTEGER', 'mode': 'NULLABLE'},
-    {'name': 'price_currency', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'protocol_fee', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'protocol_decimal', 'type': 'INTEGER', 'mode': 'NULLABLE'},
-    {'name': 'protocol_fee_currency', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'taker', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'transaction_hash', 'type': 'STRING', 'mode': 'NULLABLE'}
+    {'name': 'chain', 'type': 'STRING', 'mode': 'NULLABLE'},
+    {'name': 'contract_address', 'type': 'STRING', 'mode': 'NULLABLE'},
+    {'name': 'name', 'type': 'STRING', 'mode': 'NULLABLE'},
+    {'name': 'description', 'type': 'STRING', 'mode': 'NULLABLE'},
+    {'name': 'rank', 'type': 'STRING', 'mode': 'NULLABLE'}
 ]
 # [END define fucntions]
 
 # [START define dag]
 with DAG(
     # TODO: configuration for the dag
-    'nfts_price_etl_hourly',
+    'nfts_top_selling_etl_daily',
     default_args={'retries': 2},
     description='DAG draft for group project',
-    schedule_interval='0 * * * *',
+    schedule_interval='@daily',
     start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
     tags=['example'],
@@ -73,9 +63,9 @@ with DAG(
     # Load data fectched that is stored in local to GCS
     load_to_gcs_task = LocalFilesystemToGCSOperator(
         task_id='transform',
-        src="/tmp/fetch_transactions_for_collections.csv",
-        dst=f"data/fetch_transactions_for_collection{datetime.datetime.now()}.csv",
-        bucket="nfts_pipeline_test",
+        src="/tmp/fetch_nfts_top_daily.csv",
+        dst=f"data/fetch_nfts_top_daily{datetime.datetime.now()}.csv",
+        bucket="nftport_bucket",
         mime_type="text/csv",
         dag=dag
     )
@@ -89,12 +79,13 @@ with DAG(
     # Load all the hourly data currently in GCS to a BigQuery
     load_data_to_bq_task = GCSToBigQueryOperator(
         task_id='load_to_bq',
-        bucket="nfts_pipeline_test",
+        bucket="nftport_bucket",
         source_objects=[f"data/*.csv"],
-        destination_project_dataset_table="nfts_pipeline.nfts_pipeline_hourly",
+        destination_project_dataset_table="nftport_pipeline.nftport_daily",
         source_format="CSV",
+        allow_quoted_newlines = True,
         write_disposition="WRITE_TRUNCATE",
-        schema_fields= nfts_prices_schema,
+        schema_fields= nfts_schema,
         dag=dag
     )
     load_data_to_bq_task.doc_md = dedent(

@@ -51,7 +51,7 @@ with DAG(
     'nfts_price_etl_daily',
     default_args={'retries': 2},
     description='DAG draft for group project',
-    schedule='0 0 * * *',
+    schedule_interval='0 0 * * *',
     start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
     tags=['example'],
