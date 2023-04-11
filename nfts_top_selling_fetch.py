@@ -37,7 +37,7 @@ class FetchTopSellingNFTs:
             rank += 1
         
 
-        path = "/tmp/fetch_nfts_top_daily.csv"
+        path = "/tmp/fetch_nfts_top.csv"
         results = df
         results.to_csv(path, index=False)
         return path

@@ -38,7 +38,7 @@ nfts_schema = [
 # [START define dag]
 with DAG(
     # TODO: configuration for the dag
-    'nfts_top_selling_etl_daily',
+    'nfts_top_selling_etl_all_time',
     default_args={'retries': 2},
     description='DAG draft for group project',
     schedule_interval='@daily',
@@ -63,8 +63,8 @@ with DAG(
     # Load data fectched that is stored in local to GCS
     load_to_gcs_task = LocalFilesystemToGCSOperator(
         task_id='transform',
-        src="/tmp/fetch_nfts_top_daily.csv",
-        dst=f"data/fetch_nfts_top_daily{datetime.datetime.now()}.csv",
+        src="/tmp/fetch_nfts_top.csv",
+        dst=f"data/fetch_nfts_top_all{datetime.datetime.now()}.csv",
         bucket="nftport_bucket",
         mime_type="text/csv",
         dag=dag
@@ -81,7 +81,7 @@ with DAG(
         task_id='load_to_bq',
         bucket="nftport_bucket",
         source_objects=[f"data/*.csv"],
-        destination_project_dataset_table="nftport_pipeline.nftport_daily",
+        destination_project_dataset_table="nftport_pipeline.nftport_all_time",
         source_format="CSV",
         allow_quoted_newlines = True,
         write_disposition="WRITE_TRUNCATE",
