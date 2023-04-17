@@ -8,7 +8,7 @@ class FetchData:
         self.apiKey = "Fr-VZGooptPuK1cZslqGIIFBcYXnyEZG"
         self.headers = {"accept": "application/json"}
         self.collections = collections = ["0x793f969bc50a848efd57e5ad177ffa26773e4b14", "0xb66a603f4cfe17e3d27b87a8bfcad319856518b8", "0xd774557b647330C91Bf44cfEAB205095f7E6c367",]
-        self.num_of_trans = 100
+        self.num_of_trans = 500
 
     # Fun hourly and fetch data of a list of collections
     def fetch_transactions_for_collections(self):

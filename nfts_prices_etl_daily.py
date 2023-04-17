@@ -9,6 +9,7 @@ import pendulum
 import datetime
 from airflow import DAG
 from airflow.operators.python import PythonOperator, BranchPythonOperator
+from airflow.operators.empty import EmptyOperator
 from airflow.operators.bash import BashOperator
 from airflow.providers.google.cloud.transfers.gcs_to_gcs import GCSToGCSOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
@@ -17,13 +18,13 @@ from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQue
 
 # [START define fucntions]
 nfts_prices_schema = [
-    # TODO: better define the schema
+    # TODO: better define the schema and check for possible overflow
     {'name': 'collection_address', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'marketplace', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'token_id', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'seller', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'buyer', 'type': 'STRING', 'mode': 'NULLABLE'},
-    {'name': 'price', 'type': 'INTEGER', 'mode': 'NULLABLE'},
+    {'name': 'price', 'type': 'NUMERIC', 'mode': 'NULLABLE'},
     {'name': 'price_decimal', 'type': 'INTEGER', 'mode': 'NULLABLE'},
     {'name': 'price_currency', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'protocol_fee', 'type': 'STRING', 'mode': 'NULLABLE'},
@@ -34,13 +35,14 @@ nfts_prices_schema = [
 ]
 
 def check_collection_tables():
+    # TODO: check if the tables for the collections are created
     """
     This task checks if the tables for the collections are created
     """
-    if True:
-        return "create_collection_tables"
+    if False:
+        return ["table_exists", "load_collection_one_to_bq"]
     else:
-        return "load_collection_one_to_bq"
+        return ["table_not_exists", "create_collection_tables", "load_collection_one_to_bq"]
 # [END define fucntions]
 
 # [START define dag]
@@ -49,8 +51,8 @@ with DAG(
     'nfts_price_etl_daily',
     default_args={'retries': 2},
     description='DAG draft for group project',
-    schedule=None,
-    start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
+    schedule_interval='0 0 * * *',
+    start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
     tags=['Group Project'],
 ) as dag:
@@ -77,10 +79,13 @@ with DAG(
     dataset="nfts_pipeline"
     table="nfts_pipeline_collection_one"
 
-    # load_collection_two_to_bq_task =
-    check_collection_tables_task = BranchPythonOperator(
-        task_id='check_collection_tables',
-        python_callable=check_collection_tables,
+    # TODO: wont create new table when there is already one(need double check)
+    create_collection_tables_task = BigQueryCreateEmptyTableOperator(
+        task_id='create_collection_tables',
+        project_id=project_id,
+        dataset_id=dataset,
+        table_id=table,
+        schema_fields=nfts_prices_schema,
         dag=dag
     )
 
@@ -96,7 +101,7 @@ with DAG(
                 WHERE collection_address = '0x793f969bc50a848efd57e5ad177ffa26773e4b14'
                 GROUP BY collection_address, marketplace, token_id, seller, buyer, price, price_decimal, price_currency, protocol_fee, protocol_decimal, protocol_fee_currency, taker, transaction_hash
             ) S 
-            ON T.transaction_hash = S.transaction_hash
+            ON T.transaction_hash = S.transaction_hash and T.token_id = S.token_id
             WHEN MATCHED THEN
             UPDATE SET
                 price = S.price,
@@ -105,15 +110,6 @@ with DAG(
             INSERT ROW;
             ''',
         # sql="SELECT * FROM nfts_pipeline.nfts_pipeline_staging WHERE collection_address = '0x793f969bc50a848efd57e5ad177ffa26773e4b14'",
-        dag=dag
-    )
-
-    create_collection_tables_task = BigQueryCreateEmptyTableOperator(
-        task_id='create_collection_tables',
-        project_id=project_id,
-        dataset_id=dataset,
-        table_id=table,
-        schema_fields=nfts_prices_schema,
         dag=dag
     )
 
@@ -137,9 +133,8 @@ with DAG(
     """
     )
 
-    load_data_to_bq_staging_task >> check_collection_tables_task
-    check_collection_tables_task >> create_collection_tables_task >> load_collection_one_to_bq_task >>move_current_data_to_archive_task
-    check_collection_tables_task >> load_collection_one_to_bq_task >> move_current_data_to_archive_task
+    load_data_to_bq_staging_task >> create_collection_tables_task >> load_collection_one_to_bq_task >> move_current_data_to_archive_task
+    
    
     
 # [END define dag]
