@@ -1,30 +1,29 @@
 """
-### NFTs Prices ETL DAG (Hourly)
-This DAG is fetch_data_task >> load_to_gcs_task >> load_data_to_bq_task
+### NFTs Prices ETL DAG (Daily)
+This DAG is 
 """
 # [START import_module]
-from __future__ import annotations
-import sys
-import os
+# from __future__ import annotations
 from textwrap import dedent
 import pendulum
+from functools import reduce
 import datetime
+import os, sys
 from airflow import DAG
-from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
+from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.transfers.gcs_to_gcs import GCSToGCSOperator
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
-from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQueryOperator
-# Configure for NoModuleFOund error
+from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from nfts_prices_fetch import FetchData
 # [END import_module]
 
 # [START define fucntions]
+# TODO: also fetch block_number, block_timestamp
 nfts_prices_schema = [
-    # TODO: better define the schema
-    # TODO: price will overflow for INTEGER type
+    # TODO: better define the schema and check for possible overflow
     {'name': 'collection_address', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'marketplace', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'token_id', 'type': 'STRING', 'mode': 'NULLABLE'},
@@ -48,24 +47,28 @@ def fetch_data():
     This task fetch latest 100 transactions data for several collections from the blockchain
     """
     fetch_data = FetchData()
-    fetch_data.fetch_transactions_for_collections(collections_to_address)
+    lst_collections = list(collections_to_address.values())
+    fetch_data.initial_transactions_for_collections(lst_collections)
+
+
 # [END define fucntions]
 
 # [START define dag]
 with DAG(
     # TODO: configuration for the dag
-    'nfts_price_etl_daily',
+    'nfts_price_etl_initialize',
     default_args={'retries': 2},
     description='DAG draft for group project',
-    schedule_interval='0 * * * *',
+    schedule_interval='0 0 * * *',
     start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
     tags=['Group Project'],
 ) as dag:
     dag.doc_md = __doc__
-    # Fetch data and store in local
+
+    # Step 1
     fetch_data_task = PythonOperator(
-        task_id='fetch_data_and_transform',
+        task_id='fetch_data',
         python_callable=fetch_data
     )
     fetch_data_task.doc_md = dedent(
@@ -75,17 +78,10 @@ with DAG(
     """
     )
 
-    project_id="nft-dashboard-381202"
-    dataset="nfts_pipeline"
-    # table="nfts_pipeline_collection_one"
-    tables = [f'nfts_pipeline_collection_{i}' for i in list(collections_to_address.keys())]
-
-    # TODO: configure the bucket and path
-    # Load data fectched that is stored in local to GCS
     load_to_gcs_task = LocalFilesystemToGCSOperator(
-        task_id='load_data_to_gcs',
+        task_id='transform',
         src="/tmp/fetch_transactions_for_collections.csv",
-        dst=f"data/fetch_transactions_for_collection{datetime.datetime.now()}.csv",
+        dst=f"data/fetch_transactions_for_collection_{datetime.datetime.now()}.csv",
         bucket="nfts_pipeline_test",
         mime_type="text/csv",
         dag=dag
@@ -97,8 +93,10 @@ with DAG(
     """
     )
 
+    # Step 2
+    # TODO: create databucket and folder
     load_data_to_bq_staging_task = GCSToBigQueryOperator(
-        task_id='from_gcs_load_to_bq_staging',
+        task_id='load_to_bq_staging',
         bucket="nfts_pipeline_test",
         source_objects=["data/*.csv"],
         destination_project_dataset_table="nfts_pipeline.nfts_staging_table",
@@ -114,11 +112,33 @@ with DAG(
     """
     )
 
-    with TaskGroup("from_staging_load_collections_to_bq") as load_data_to_bq_task:
+    # Step 2
+    project_id="nft-dashboard-381202"
+    dataset="nfts_pipeline"
+    # table="nfts_pipeline_collection_one"
+    tables = []
+    with TaskGroup(f"create_collection_tables") as create_collection_tables_task:
+        create_tasks = []
+        for collection, address in collections_to_address.items():
+            task = BigQueryCreateEmptyTableOperator(
+                task_id=f'create_collection_table_{collection}',
+                project_id=project_id,
+                dataset_id=dataset,
+                table_id=f'nfts_pipeline_collection_{collection}',
+                schema_fields=nfts_prices_schema,
+                dag=dag
+            )
+            tables.append(f'nfts_pipeline_collection_{collection}')
+            create_tasks.append(task)
+        # reduce(lambda x, y: x >> y, tasks)
+        # TODO parallerize the task
+        create_tasks
+
+
+    with TaskGroup("load_collections_to_bq") as load_collections_to_bq_task:
         load_tasks = []
         for i in range(4):
             address = list(collections_to_address.values())[i]
-            print(address)
             task = BigQueryExecuteQueryOperator(
                 task_id=f'load_collection_to_bq_{tables[i]}',
                 use_legacy_sql=False,
@@ -144,14 +164,18 @@ with DAG(
             load_tasks.append(task)
         load_tasks
 
+    # load_collection_three_to_bq_task =
+
+    # TODO: configure the bucket and path
+    # Load data fectched that is stored in local to GCS
     move_current_data_to_archive_task = GCSToGCSOperator(
-    task_id='move_current_data_gcs_to_archive',
-    source_bucket="nfts_pipeline_test",
-    source_object="data/*.csv",
-    destination_bucket="nfts_pipeline_test",
-    destination_object="archive/",
-    move_object=True,
-    dag=dag
+        task_id='move_current_data_to_archive',
+        source_bucket="nfts_pipeline_test",
+        source_object="data/*.csv",
+        destination_bucket="nfts_pipeline_test",
+        destination_object="archive/",
+        move_object=True,
+        dag=dag
     )
     move_current_data_to_archive_task.doc_md = dedent(
         """\
@@ -160,5 +184,8 @@ with DAG(
     """
     )
 
-    fetch_data_task >> load_to_gcs_task >> load_data_to_bq_staging_task >> load_data_to_bq_task >> move_current_data_to_archive_task
+    fetch_data_task >> load_to_gcs_task >> load_data_to_bq_staging_task >> create_collection_tables_task >> load_collections_to_bq_task >> move_current_data_to_archive_task
+    
+   
+    
 # [END define dag]

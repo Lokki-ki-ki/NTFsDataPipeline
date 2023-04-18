@@ -1,5 +1,5 @@
 """
-### Crypto Prices ETL DAG (Daily)
+### Crypto Prices ETL DAG (Monthly)
 This DAG is 
 """
 # [START import_module]
@@ -37,7 +37,7 @@ crypto_prices_schema = [
 def fetch_data():
     fetch_data = FetchData()
     ticker = "ETH-USD"
-    file_name = fetch_data.main(ticker)
+    file_name = fetch_data.fetch_crypto_prices_by_interval(ticker, 7)
     return file_name
 
 # [END define fucntions]
@@ -45,10 +45,10 @@ def fetch_data():
 # [START define dag]
 with DAG(
     # TODO: configuration for the dag
-    'crypto_prices_etl',
+    'crypto_prices_etl_weekly',
     default_args={'retries': 2},
     description='DAG draft for group project',
-    schedule='@monthly',
+    schedule='@weekly',
     start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
     tags=['Group Project'],
@@ -87,13 +87,6 @@ with DAG(
     dataset="crypto_pipeline"
     table="crypto_eth_prices"
 
-    create_bq_dataset_task = BigQueryCreateEmptyDatasetOperator(
-        task_id='create_bq_dataset',
-        project_id=project_id,
-        dataset_id=dataset,
-        dag=dag
-    )
-
     load_data_to_bq_staging_task = GCSToBigQueryOperator(
         task_id='load_to_bq_staging',
         bucket="nfts_pipeline_test",
@@ -109,16 +102,6 @@ with DAG(
     #### Load all data under data folder to big query staging table
     This task load all the data fetched and upload to GCS bucket and load to BigQuery
     """
-    )
-
-    # TODO: wont create new table when there is already one(need double check)
-    create_crypto_tables_task = BigQueryCreateEmptyTableOperator(
-        task_id='create_crypto_tables',
-        project_id=project_id,
-        dataset_id=dataset,
-        table_id=table,
-        schema_fields=crypto_prices_schema,
-        dag=dag
     )
 
     load_staging_to_bq_task = BigQueryExecuteQueryOperator(
@@ -162,7 +145,7 @@ with DAG(
     """
     )
 
-    fetch_data_task >> create_bq_dataset_task >> load_data_to_bq_staging_task >> create_crypto_tables_task >> load_staging_to_bq_task >> move_current_data_to_archive_task
+    fetch_data_task >> load_to_gcs_task >> load_data_to_bq_staging_task >> load_staging_to_bq_task >> move_current_data_to_archive_task
     
    
     
