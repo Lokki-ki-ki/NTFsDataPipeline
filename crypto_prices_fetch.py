@@ -34,16 +34,16 @@ class FetchData:
         start_date = end_date - timedelta(days=interval)
         print(start_date, end_date)
         df = self.fetch_crypto_prices(crypto_ticker, start_date, end_date, '1d')
-        df.to_csv("/tmp/crypto_prices.csv", index=False)
+        df.to_csv(f"/tmp/{crypto_ticker}-prices.csv", index=False)
         return f"{crypto_ticker}-prices.csv"
     
 if __name__ == "__main__":
     crypto_ticker = "BTC-USD"
     format='%Y-%m-%d'
-    # For interval 30m, we can only fetch data for 60 days
-    end_date = datetime.today()
-    start_date = end_date - timedelta(days=2000)
-    print(start_date, end_date)
-    fetch = FetchData()
-    df = fetch.fetch_crypto_prices(crypto_ticker, start_date, end_date)
-    df.to_csv("/tmp/crypto_prices.csv", index=False)
+    # # For interval 30m, we can only fetch data for 60 days
+    # end_date = datetime.today()
+    # start_date = end_date - timedelta(days=2000)
+    # print(start_date, end_date)
+    # fetch = FetchData()
+    # df = fetch.fetch_crypto_prices(crypto_ticker, start_date, end_date)
+    # df.to_csv("/tmp/crypto_prices.csv", index=False)
