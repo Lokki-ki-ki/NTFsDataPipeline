@@ -48,7 +48,7 @@ def fetch_data():
     """
     fetch_data = FetchData()
     lst_collections = list(collections_to_address.values())
-    fetch_data.fetch_transactions_for_collections(lst_collections)
+    fetch_data.initial_transactions_for_collections(lst_collections)
 
 
 # [END define fucntions]

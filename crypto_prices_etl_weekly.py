@@ -145,7 +145,7 @@ with DAG(
     """
     )
 
-    fetch_data_task >> load_data_to_bq_staging_task >> load_staging_to_bq_task >> move_current_data_to_archive_task
+    fetch_data_task >> load_to_gcs_task >> load_data_to_bq_staging_task >> load_staging_to_bq_task >> move_current_data_to_archive_task
     
    
     
