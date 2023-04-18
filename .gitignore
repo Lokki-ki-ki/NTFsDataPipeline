@@ -4,3 +4,4 @@
 /*.csv
 /.ipynb_checkpoints
 /Analytics/.ipynb_checkpoints
+__pycache__
