@@ -1,0 +1,30 @@
+{
+    "crypto_staging_table" : [
+        {"name": "Open", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "High", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Low", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Close", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Adj_Close", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Volumn", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Date", "type": "DATE", "mode": "NULLABLE"},
+        {"name": "Time", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "Prev_Close", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Simple_Return", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Log_Return", "type": "NUMERIC", "mode": "NULLABLE"}
+    ],
+
+    "crypto_eth_table" : [
+        {"name": "Open", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "High", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Low", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Close", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Adj_Close", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Volumn", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Date", "type": "DATE", "mode": "NULLABLE"},
+        {"name": "Time", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "Prev_Close", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Simple_Return", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "Log_Return", "type": "NUMERIC", "mode": "NULLABLE"}
+    ]
+
+}

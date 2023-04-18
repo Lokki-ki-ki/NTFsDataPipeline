@@ -1,0 +1,32 @@
+{
+    "nfts_staging_table" : [
+        {"name": "collection_address", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "marketplace", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "token_id", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "seller", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "buyer", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "price", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "price_currency", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "protocol_fee", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "protocol_fee_currency", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "taker", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "transaction_hash", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "block_number", "type": "INTEGER", "mode": "NULLABLE"}
+    ],
+
+    "nfts_collection_table" : [
+        {"name": "collection_address", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "marketplace", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "token_id", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "seller", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "buyer", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "price", "type": "NUMERIC", "mode": "NULLABLE"},
+        {"name": "price_currency", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "protocol_fee", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "protocol_fee_currency", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "taker", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "transaction_hash", "type": "STRING", "mode": "NULLABLE"},
+        {"name": "block_number", "type": "INTEGER", "mode": "NULLABLE"}
+    ]
+
+}

@@ -1,6 +1,6 @@
 """
-### Crypto Prices ETL DAG (Daily)
-This DAG is 
+### Crypto Prices ETL DAG (Initialize)
+This DAG is for initializing the Crypto Prices Database. It will create a dataset and a table in BigQuery.
 """
 # [START import_module]
 # from __future__ import annotations
@@ -37,7 +37,7 @@ crypto_prices_schema = [
 def fetch_data():
     fetch_data = FetchData()
     ticker = "ETH-USD"
-    file_name = fetch_data.main(ticker)
+    file_name = fetch_data.fetch_crypto_prices_by_interval(ticker, 1000)
     return file_name
 
 # [END define fucntions]
@@ -45,10 +45,10 @@ def fetch_data():
 # [START define dag]
 with DAG(
     # TODO: configuration for the dag
-    'crypto_prices_etl',
+    'crypto_prices_etl_initialize',
     default_args={'retries': 2},
     description='DAG draft for group project',
-    schedule='@monthly',
+    schedule='@once',
     start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
     tags=['Group Project'],
@@ -165,5 +165,3 @@ with DAG(
     fetch_data_task >> create_bq_dataset_task >> load_data_to_bq_staging_task >> create_crypto_tables_task >> load_staging_to_bq_task >> move_current_data_to_archive_task
     
    
-    
-# [END define dag]

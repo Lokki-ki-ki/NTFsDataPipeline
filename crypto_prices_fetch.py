@@ -8,12 +8,12 @@ class FetchData:
     def __init__(self) -> None:
         pass
 
-    def fetch_crypto_prices(self, crypto_ticker: datetime, start_date: datetime, end_date: str) -> pd.DataFrame:
+    def fetch_crypto_prices(self, crypto_ticker: datetime, start_date: datetime, end_date: str, interval: str) -> pd.DataFrame:
         """
         INPUT: crypto ticker, start date, end date
         OUTPUT: dataframe of crypto prices
         """
-        df = yf.download(crypto_ticker, start_date, end_date, interval='1d')
+        df = yf.download(crypto_ticker, start_date, end_date, interval=interval)
         df = df.apply(lambda x: round(x, 6))
         df['Date'] = df.index.date
         # Timezone is UTC
@@ -27,16 +27,14 @@ class FetchData:
         print(df.head(30))
         return df
     
-    def main(self, crypto_ticker: str):
-        # crypto_ticker = "ETH-USD"
+    # Daily data
+    def fetch_crypto_prices_by_interval(self, crypto_ticker: str, interval: int):
         format='%Y-%m-%d'
-        # For interval 30m, we can only fetch data for 60 days
         end_date = datetime.today()
-        start_date = end_date - timedelta(days=2000)
+        start_date = end_date - timedelta(days=interval)
         print(start_date, end_date)
-        fetch = FetchData()
-        df = fetch.fetch_crypto_prices(crypto_ticker, start_date, end_date)
-        df.to_csv(f"/tmp/{crypto_ticker}-prices.csv", index=False)
+        df = self.fetch_crypto_prices(crypto_ticker, start_date, end_date, '1d')
+        df.to_csv("/tmp/crypto_prices.csv", index=False)
         return f"{crypto_ticker}-prices.csv"
     
 if __name__ == "__main__":
