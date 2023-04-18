@@ -104,16 +104,6 @@ with DAG(
     """
     )
 
-    # TODO: wont create new table when there is already one(need double check)
-    create_crypto_tables_task = BigQueryCreateEmptyTableOperator(
-        task_id='create_crypto_tables',
-        project_id=project_id,
-        dataset_id=dataset,
-        table_id=table,
-        schema_fields=crypto_prices_schema,
-        dag=dag
-    )
-
     load_staging_to_bq_task = BigQueryExecuteQueryOperator(
         task_id='load_staging_to_bq',
         # TODO: configure the query which can eliminate the duplicates
@@ -155,7 +145,7 @@ with DAG(
     """
     )
 
-    fetch_data_task >> load_data_to_bq_staging_task >> create_crypto_tables_task >> load_staging_to_bq_task >> move_current_data_to_archive_task
+    fetch_data_task >> load_data_to_bq_staging_task >> load_staging_to_bq_task >> move_current_data_to_archive_task
     
    
     
