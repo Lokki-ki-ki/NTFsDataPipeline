@@ -54,7 +54,7 @@ def fetch_data():
 # [START define dag]
 with DAG(
     # TODO: configuration for the dag
-    'nfts_price_etl_hourly',
+    'nfts_price_etl_daily',
     default_args={'retries': 2},
     description='DAG draft for group project',
     schedule_interval='0 * * * *',
