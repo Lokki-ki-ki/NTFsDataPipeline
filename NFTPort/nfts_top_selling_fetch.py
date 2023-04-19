@@ -16,7 +16,7 @@ class FetchTopSellingNFTs:
         params = {
             "period": period,
             "page_size": 50,
-            "page_number": 100,
+            "page_number": 1,
             "order_by": "volume",
             "chain": ["ethereum", "polygon"]
         }
@@ -32,6 +32,7 @@ class FetchTopSellingNFTs:
             dic["contract_address"] = nft["contract_address"]
             dic["name"] = nft["name"]
             dic["description"] = nft["metadata"]["description"]
+            dic["picture"] = nft["metadata"]["thumbnail_url"]
             dic["rank"] = rank
             df = pd.concat([df, pd.DataFrame(dic, index=[rank-1])])
             rank += 1
