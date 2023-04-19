@@ -2,21 +2,15 @@ import React, { useState } from "react";
 import {
   Box,
   Flex,
-  Avatar,
   Link,
   Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  useDisclosure,
+  HStack,
   useColorModeValue,
   Stack,
-  useColorMode,
-  Center,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+
+const Links = ["Top Selling NFTs", "NFT Transactions", "Streaming"];
 
 const NavLink = ({ children }) => (
   <Link
@@ -45,7 +39,11 @@ export default function Nav() {
       <Box bg={colorMode === "light" ? "gray.100" : "gray.900"} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <Box>Logo</Box>
-
+          <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
+            {Links.map((link) => (
+              <NavLink key={link}>{link}</NavLink>
+            ))}
+          </HStack>
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={7}>
               <Button onClick={toggleColorMode}>
