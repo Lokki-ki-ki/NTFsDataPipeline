@@ -16,7 +16,7 @@ import {
 function Ranking({ data }) {
   return (
     <TableContainer>
-      <Table variant="striped" style={{ tableLayout: "fixed", width: "100%" }}>
+      <Table variant="striped" style={{ width: "100%" }}>
         <TableCaption>Top Selling NFTs</TableCaption>
         <Thead>
           <Tr>
@@ -31,8 +31,8 @@ function Ranking({ data }) {
           {data.map((nft) => (
             <Tr key={nft.rank}>
               <Td>{nft.rank}</Td>
-              <Td>
-                <Wrap>
+              <Td w={"14"}>
+                <Wrap align={"center"}>
                   <WrapItem>
                     <Avatar src={nft.picture} />
                   </WrapItem>
