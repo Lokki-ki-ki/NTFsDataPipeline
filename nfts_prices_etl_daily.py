@@ -105,6 +105,7 @@ with DAG(
         source_format="CSV",
         write_disposition="WRITE_TRUNCATE",
         schema_fields=nfts_prices_schema,
+        skip_leading_rows=1,
         dag=dag
     )
     load_data_to_bq_staging_task.doc_md = dedent(
