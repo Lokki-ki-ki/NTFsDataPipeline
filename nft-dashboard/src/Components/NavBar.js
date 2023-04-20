@@ -11,6 +11,20 @@ import {
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 const Links = ["Top Selling NFTs", "NFT Transactions", "Streaming"];
+const NAV_ITEMS = [
+  {
+    label: "Top Selling NFTs",
+    href: "/topSellingNFTs",
+  },
+  {
+    label: "NFT Transactions",
+    href: "#",
+  },
+  {
+    label: "Streaming",
+    href: "#",
+  },
+];
 
 const NavLink = ({ children }) => (
   <Link
@@ -21,9 +35,9 @@ const NavLink = ({ children }) => (
       textDecoration: "none",
       bg: useColorModeValue("gray.200", "gray.700"),
     }}
-    href={"#"}
+    href={children.href}
   >
-    {children}
+    {children.label}
   </Link>
 );
 
@@ -38,9 +52,9 @@ export default function Nav() {
     <>
       <Box bg={colorMode === "light" ? "gray.100" : "gray.900"} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-          <Box>Logo</Box>
+          <Box>NFT Dashboard</Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
-            {Links.map((link) => (
+            {NAV_ITEMS.map((link) => (
               <NavLink key={link}>{link}</NavLink>
             ))}
           </HStack>
