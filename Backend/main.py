@@ -19,9 +19,10 @@ import sys
 from flask import Flask, request, jsonify
 from google.cloud import pubsub_v1, bigquery
 from hashlib import sha1
-
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 project_id = 'nft-dashboard-381202'
 client = bigquery.Client(project=project_id)

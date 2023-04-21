@@ -19,7 +19,7 @@ from gcloud_helper import GoogleHelper
 # [END import_module]
 
 # [START define fucntions]
-project_id="nft-dashboard-381202"
+project_id=project_id
 nfts_schema = [
     {'name': 'chain', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'contract_address', 'type': 'STRING', 'mode': 'NULLABLE'},
@@ -34,8 +34,7 @@ tables = {'all_time':'', 'daily': '', 'weekly': '', 'monthly': ''}
 def create_gcs_bucket():
     gcs_helper = GoogleHelper()
     gcs_helper.create_bucket("nftport_bucket")
-    # gcs_helper.create_bucket("nfts_bucket")
-
+    gcs_helper.create_bucket("nfts_pipeline_test")
 # [END define fucntions]
 
 # [START define dag]
@@ -44,7 +43,7 @@ with DAG(
     'project_initialize',
     default_args={'retries': 2},
     description='DAG draft for group project',
-    schedule_interval='@once',
+    schedule_interval=None,
     start_date=pendulum.datetime(2023, 3, 1, tz="UTC"),
     catchup=False,
     tags=['Group Project'],
@@ -58,14 +57,37 @@ with DAG(
 
     with TaskGroup("create_bq_table") as create_bq_table_task:
 
-        task = BigQueryCreateEmptyTableOperator(
-            task_id='create_bq_table',
+        task1 = BigQueryCreateEmptyTableOperator(
+            task_id='create_bq_table_nftport_weekly',
             dataset_id='nftport_pipeline',
             table_id='nftport_weekly',
             schema_fields=nfts_schema,
-            project_id="nft-dashboard-381202",
+            project_id=project_id,
+            if_exists='log',
             location='US'
         )
+
+        task2 = BigQueryCreateEmptyTableOperator(
+            task_id='create_bq_table_nftport_daily',
+            dataset_id='nftport_pipeline',
+            table_id='nftport_daily',
+            schema_fields=nfts_schema,
+            project_id=project_id,
+            if_exists='log',
+            location='US'
+        )
+
+        task3 = BigQueryCreateEmptyTableOperator(
+            task_id='create_bq_table_nftport_monthly',
+            dataset_id='nftport_pipeline',
+            table_id='nftport_monthly',
+            schema_fields=nfts_schema,
+            project_id=project_id,
+            if_exists='log',
+            location='US'
+        )
+    [task1, task2, task3]
+
 
     with TaskGroup("create_bq_datasets") as create_bq_datasets_task:
 
