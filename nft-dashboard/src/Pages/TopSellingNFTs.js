@@ -4,17 +4,21 @@ import Ranking from "../Components/Ranking";
 import { Flex, Heading } from "@chakra-ui/react";
 import { Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
 
+
+const apiClient = axios.create({baseURL: 'http://backend-pyvsd2ddxq-as.a.run.app'})
+
 function TopSellingNFTs() {
   const [nftportAllTime, setNftportAllTime] = useState([]);
   const [selectedList, setSelectedList] = useState("Daily");
 
   const handleListClick = (item) => {
     setSelectedList(item);
+    setNftportAllTime([]);
   };
 
   useEffect(() => {
     if (selectedList === "All Time") {
-      axios
+        apiClient
         .get("/nftport-all-time")
         .then((response) => {
           setNftportAllTime(response.data);
@@ -23,7 +27,20 @@ function TopSellingNFTs() {
           console.error(error);
         });
     } else if (selectedList === "Daily") {
-      axios
+          apiClient.get('/nftport-all-time', {
+            headers: {
+              'X-XSRF-TOKEN': 'abc123'
+            }
+          })
+        .then((response) => {
+          console.log(response.data)
+          setNftportAllTime(response.data);
+        })
+        .catch((error) => {
+          console.error(error.err);
+        });
+    } else if (selectedList === "Daily") {
+      apiClient
         .get("/nftport-daily")
         .then((response) => {
           setNftportAllTime(response.data);
@@ -32,7 +49,7 @@ function TopSellingNFTs() {
           console.error(error);
         });
     } else if (selectedList === "Weekly") {
-      axios
+        apiClient
         .get("/nftport-weekly")
         .then((response) => {
           setNftportAllTime(response.data);
@@ -41,7 +58,7 @@ function TopSellingNFTs() {
           console.error(error);
         });
     } else if (selectedList === "Monthly") {
-      axios
+        apiClient
         .get("/nftport-monthly")
         .then((response) => {
           setNftportAllTime(response.data);

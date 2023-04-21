@@ -12,13 +12,14 @@ import os, sys
 from airflow import DAG
 from airflow.utils.task_group import TaskGroup
 from airflow.operators.python import PythonOperator
-from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator
+from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator, BigQueryCreateEmptyDatasetOperator
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from NFTPort.nfts_top_selling_fetch import FetchTopSellingNFTs
 from gcloud_helper import GoogleHelper
 # [END import_module]
 
 # [START define fucntions]
+project_id="nft-dashboard-381202"
 nfts_schema = [
     {'name': 'chain', 'type': 'STRING', 'mode': 'NULLABLE'},
     {'name': 'contract_address', 'type': 'STRING', 'mode': 'NULLABLE'},
@@ -33,7 +34,7 @@ tables = {'all_time':'', 'daily': '', 'weekly': '', 'monthly': ''}
 def create_gcs_bucket():
     gcs_helper = GoogleHelper()
     gcs_helper.create_bucket("nftport_bucket")
-    gcs_helper.create_bucket()
+    # gcs_helper.create_bucket("nfts_bucket")
 
 # [END define fucntions]
 
@@ -65,6 +66,33 @@ with DAG(
             project_id="nft-dashboard-381202",
             location='US'
         )
+
+    with TaskGroup("create_bq_datasets") as create_bq_datasets_task:
+
+        task1 = BigQueryCreateEmptyDatasetOperator(
+            task_id='create_bq_dataset_crypto',
+            project_id=project_id,
+            dataset_id="crypto_pipeline",
+            if_exists='log',
+            dag=dag
+        )
+
+        task2 = BigQueryCreateEmptyDatasetOperator(
+            task_id='create_bq_dataset_nfts',
+            project_id=project_id,
+            dataset_id="nfts_pipeline",
+            if_exists='log',
+            dag=dag
+        )
+
+        task3 = BigQueryCreateEmptyDatasetOperator(
+            task_id='create_bq_dataset_nftport',
+            project_id=project_id,
+            dataset_id="nftport_pipeline",
+            if_exists='log',
+            dag=dag
+        )
+    [task1, task2, task3]
 
 create_gcs_bucket_task >> create_bq_datasets_task >> create_bq_table_task
     
