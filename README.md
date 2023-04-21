@@ -30,7 +30,7 @@ In general, an NFT Dashboard can enable consumers easily traverse the complicate
 ### Step2 - Before run the dag, please auth your google cloud. 
 If don't have gcloud cli, please install and follwoing Local development environmen in the link https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to. 
 (For our grp member)Once initiate gcloud successfully, can use `gcloud projects list` and `gcloud config set project nft-dashboard-381202` to set the proj to our current proj.
-(For non-admin)use `gcloud auth activate-service-account project-3107-credential@nft-dashboard-381202.iam.gserviceaccount.com --key-file nft-dashboard-381202-58bb0cbf1a69.json --project=nft-dashboard-381202` in gcloud cli to use our service account.
+(For non-admin)use `export GOOGLE_APPLICATION_CREDENTIALS='nft-dashboard-381202-0f0a9018c1a0.json'` in gcloud cli to use our service account.
 
 ### Step3 - Run the dags test
 `airflow dags test project_initialize` and `airflow dags test nfts_price_etl_hourly` currently the dag_id is airlflow_draft can you can check the data under gcs/nfts_pipeline_test and bigquery/nfts_pipeline
