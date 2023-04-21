@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/NTFsDataPipeline/static/css/main.073c9b0a.css",
+    "main.js": "/NTFsDataPipeline/static/js/main.38d40036.js",
+    "static/js/787.c5e0b269.chunk.js": "/NTFsDataPipeline/static/js/787.c5e0b269.chunk.js",
+    "index.html": "/NTFsDataPipeline/index.html",
+    "main.073c9b0a.css.map": "/NTFsDataPipeline/static/css/main.073c9b0a.css.map",
+    "main.38d40036.js.map": "/NTFsDataPipeline/static/js/main.38d40036.js.map",
+    "787.c5e0b269.chunk.js.map": "/NTFsDataPipeline/static/js/787.c5e0b269.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.38d40036.js"
+  ]
+}
