@@ -1,5 +1,25 @@
 # NFTsDataPipeline
 
+## Background
+NFTs, or non-fungible tokens, are a hot topic in the world of cryptocurrencies and digital assets. NFTs are distinct digital assets that are kept on a blockchain network, are not divisible, and cannot be copied. NFTs are important to collectors, investors, and artists because to their distinct qualities. Digital artwork, collectibles, music, films, and other digital assets are now represented by NFTs. As a result, millions of dollars have been spent purchasing and selling NFTs on various online marketplaces over the past few years, fueling the NFT market's exponential growth.
+
+## Motivation
+Tools that can assist buyers, sellers, and investors in navigating the complicated world of NFTs are needed while the NFT market is still in its infancy. In order to track NFT sales, trends, and other crucial information that can assist users in making wise decisions, an NFT Dashboard project might be a useful tool. Users can examine and study NFT data from multiple marketplaces and collections using the project's user-friendly interface. To help consumers stay current on their NFT investments, the dashboard can also incorporate features like alerts, notifications, and portfolio tracking.
+
+In general, an NFT Dashboard can enable consumers easily traverse the complicated world of NFTs and offer a valuable service to the expanding NFT market.
+
+## Stack
+1. Alchemy NFT API
+2. Yahoo Finance API
+3. NFTPort API
+4. Google Cloud Storage
+5. Google Cloud BigQuery
+6. Google Cloud Pub/Sub
+7. MatPlotLib
+8. TensorFlow
+9. Flask
+10. Pandas
+
 
 ### Tips for running our dags
 ### Step1 - Pls clone this repo under your airflow/dags/, then the airflow would be able to detect this folder
@@ -11,8 +31,8 @@ If don't have gcloud cli, please install and follwoing Local development environ
 `airflow dags test nfts_price_etl_hourly` and `airflow dags test nfts_price_etl_daily` currently the dag_id is airlflow_draft can you can check the data under gcs/nfts_pipeline_test and bigquery/nfts_pipeline
 
 ### Other Tips
-Design of dags pls check https://docs.google.com/document/d/1Cg8LuNmWu1hdsvHbumb2-7xJl61iMut_jWvDCJ_Q3gc/edit
-Things to be improved has been commented as #TODO: which can be detected by vscode extension TODO Tree
+More details of the Project can be found here: 
+https://docs.google.com/document/d/14X3D21B-_jq4ibKd1-gIIURfoAJetyzs48kOGLADYfY/edit?usp=sharing
 
 
  
