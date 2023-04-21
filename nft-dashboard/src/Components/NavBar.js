@@ -14,7 +14,7 @@ const Links = ["Top Selling NFTs", "NFT Transactions", "Streaming"];
 const NAV_ITEMS = [
   {
     label: "Top Selling NFTs",
-    href: "/topSellingNFTs",
+    href: "topSellingNFTs",
   },
   {
     label: "NFT Transactions",

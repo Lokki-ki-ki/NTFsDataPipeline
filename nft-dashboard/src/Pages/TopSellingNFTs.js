@@ -29,7 +29,7 @@ function TopSellingNFTs() {
     } else if (selectedList === "Daily") {
           apiClient.get('/nftport-all-time', {
             headers: {
-              'X-XSRF-TOKEN': 'abc123'
+                'X-Requested-With': 'XMLHttpRequest'
             }
           })
         .then((response) => {
@@ -40,8 +40,11 @@ function TopSellingNFTs() {
           console.error(error.err);
         });
     } else if (selectedList === "Daily") {
-      apiClient
-        .get("/nftport-daily")
+      apiClient.get("/nftport-daily", {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
         .then((response) => {
           setNftportAllTime(response.data);
         })
@@ -49,8 +52,11 @@ function TopSellingNFTs() {
           console.error(error);
         });
     } else if (selectedList === "Weekly") {
-        apiClient
-        .get("/nftport-weekly")
+        apiClient.get("/nftport-weekly", {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
         .then((response) => {
           setNftportAllTime(response.data);
         })
@@ -58,8 +64,11 @@ function TopSellingNFTs() {
           console.error(error);
         });
     } else if (selectedList === "Monthly") {
-        apiClient
-        .get("/nftport-monthly")
+        apiClient.get("/nftport-monthly", {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
         .then((response) => {
           setNftportAllTime(response.data);
         })
