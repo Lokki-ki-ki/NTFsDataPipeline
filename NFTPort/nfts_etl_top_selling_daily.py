@@ -15,7 +15,7 @@ from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesyste
 from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQueryOperator
 # Configure for NoModuleFOund error
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from NFTPort.nfts_top_selling_fetch import FetchTopSellingNFTs
+from nfts_top_selling_fetch import FetchTopSellingNFTs
 # [END import_module]
 
 # Define global variable for current datetime
