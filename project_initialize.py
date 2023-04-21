@@ -66,7 +66,7 @@ with DAG(
             location='US'
         )
 
-create_gcs_bucket_task >> create_bq_datasets >> create_bq_table_task
+create_gcs_bucket_task >> create_bq_datasets_task >> create_bq_table_task
     
    
     
