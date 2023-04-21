@@ -2,6 +2,7 @@
 /.gitattributes
 /.DS_Store
 /*.csv
+nft-dashboard/node_modules/*
 /.ipynb_checkpoints
 /Analytics/.ipynb_checkpoints
 __pycache__
