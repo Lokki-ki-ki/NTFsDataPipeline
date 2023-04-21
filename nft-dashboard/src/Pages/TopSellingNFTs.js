@@ -4,9 +4,7 @@ import Ranking from "../Components/Ranking";
 import { Flex, Heading } from "@chakra-ui/react";
 import { Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
 
-
-const apiClient = axios.create({baseURL: 'http://backend-pyvsd2ddxq-as.a.run.app'})
-
+const apiClient = axios.create({baseURL: 'https://proxy.cors.sh/https://backend-pyvsd2ddxq-as.a.run.app'})
 function TopSellingNFTs() {
   const [nftportAllTime, setNftportAllTime] = useState([]);
   const [selectedList, setSelectedList] = useState("Daily");
@@ -18,15 +16,6 @@ function TopSellingNFTs() {
 
   useEffect(() => {
     if (selectedList === "All Time") {
-        apiClient
-        .get("/nftport-all-time")
-        .then((response) => {
-          setNftportAllTime(response.data);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else if (selectedList === "Daily") {
           apiClient.get('/nftport-all-time', {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
