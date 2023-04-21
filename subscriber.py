@@ -1,10 +1,14 @@
 import os
-from google.cloud import pubsub_v1
 import math
 import collections
+from dotenv import load_dotenv
+from google.cloud import pubsub_v1
+load_dotenv()
+credential=os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential
+project_id=os.environ.get('PROJECT_ID')
 
 # Write a heavy hitter app for incoming streaming data
-
 class Subscriber:
     def __init__(self, project_id, topic, subscription):
         self.subscription = f'projects/{project_id}/subscriptions/{subscription}'

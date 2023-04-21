@@ -8,6 +8,7 @@ import os
 import sys
 from textwrap import dedent
 import pendulum
+from dotenv import load_dotenv
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.transfers.gcs_to_gcs import GCSToGCSOperator
@@ -16,6 +17,9 @@ from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesyste
 from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator, BigQueryCreateEmptyDatasetOperator
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from crypto_prices_fetch import FetchData
+load_dotenv()
+credential=os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential
 # [END import_module]
 
 # [START define fucntions]

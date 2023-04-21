@@ -10,6 +10,7 @@ from textwrap import dedent
 import pendulum
 import datetime
 from airflow import DAG
+from dotenv import load_dotenv
 from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
@@ -20,6 +21,11 @@ from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQue
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from nfts_prices_fetch import FetchData
 # [END import_module]
+load_dotenv()
+credential=os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential
+project_id=os.environ.get('PROJECT_ID')
+dataset=os.environ.get('DATASET_NFTS')
 
 # [START define fucntions]
 nfts_prices_schema = [
@@ -75,12 +81,7 @@ with DAG(
     """
     )
 
-    project_id="nft-dashboard-381202"
-    dataset="nfts_pipeline"
-    # table="nfts_pipeline_collection_one"
     tables = [f'nfts_pipeline_collection_{i}' for i in list(collections_to_address.keys())]
-
-    # TODO: configure the bucket and path
     # Load data fectched that is stored in local to GCS
     load_to_gcs_task = LocalFilesystemToGCSOperator(
         task_id='load_data_to_gcs',

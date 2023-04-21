@@ -1,6 +1,6 @@
 """
-### NFTs Prices ETL DAG (Daily)
-This DAG is 
+### NFTs Prices ETL DAG Initial
+This DAG is for initially loading a large amount of data into BigQuery
 """
 # [START import_module]
 # from __future__ import annotations
@@ -9,6 +9,7 @@ import pendulum
 from functools import reduce
 import datetime
 import os, sys
+from dotenv import load_dotenv
 from airflow import DAG
 from airflow.utils.task_group import TaskGroup
 from airflow.operators.python import PythonOperator
@@ -19,7 +20,11 @@ from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQue
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from nfts_prices_fetch import FetchData
 # [END import_module]
-
+load_dotenv()
+credential=os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential
+project_id=os.environ.get('PROJECT_ID')
+dataset=os.environ.get('DATASET_NFTS')
 # [START define fucntions]
 # TODO: also fetch block_number, block_timestamp
 nfts_prices_schema = [
@@ -49,8 +54,6 @@ def fetch_data():
     fetch_data = FetchData()
     lst_collections = list(collections_to_address.values())
     fetch_data.initial_transactions_for_collections(lst_collections)
-
-
 # [END define fucntions]
 
 # [START define dag]
@@ -113,9 +116,6 @@ with DAG(
     )
 
     # Step 2
-    project_id="nft-dashboard-381202"
-    dataset="nfts_pipeline"
-    # table="nfts_pipeline_collection_one"
     tables = []
     with TaskGroup(f"create_collection_tables") as create_collection_tables_task:
         create_tasks = []
@@ -126,6 +126,7 @@ with DAG(
                 dataset_id=dataset,
                 table_id=f'nfts_pipeline_collection_{collection}',
                 schema_fields=nfts_prices_schema,
+                if_exists='log',
                 dag=dag
             )
             tables.append(f'nfts_pipeline_collection_{collection}')
@@ -164,9 +165,6 @@ with DAG(
             load_tasks.append(task)
         load_tasks
 
-    # load_collection_three_to_bq_task =
-
-    # TODO: configure the bucket and path
     # Load data fectched that is stored in local to GCS
     move_current_data_to_archive_task = GCSToGCSOperator(
         task_id='move_current_data_to_archive',
