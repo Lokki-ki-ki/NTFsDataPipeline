@@ -8,3 +8,5 @@ nft-dashboard/node_modules/*
 __pycache__
 /CryptoDAGs/__pycache__
 NFTTransDAGs/__pycache__
+node_modules
+

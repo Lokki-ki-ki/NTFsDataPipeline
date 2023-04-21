@@ -1,20 +1,19 @@
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import TopSellingNFTs from "./Pages/TopSellingNFTs";
+import Visualizations from "./Pages/Visualizations";
 
 
 function App() {
   return (
     <>
       <Router basename={"/NTFsDataPipeline"}>
-        <div className="container">
-          <TopSellingNFTs />
           <Routes>
-            {/*<Route path="/topSellingNFTs" component={<TopSellingNFTs />} />*/}
-            <Route exact path="/" component={<TopSellingNFTs />} />
+            <Route path="/topSellingNFTs" element={<TopSellingNFTs />} />
+            <Route exact path="/" element={<TopSellingNFTs />} />
+            <Route path="/visualizations" element={<Visualizations />} />
           </Routes>
-        </div>
-        <div className="footer"></div>
+      
       </Router>
     </>
   );

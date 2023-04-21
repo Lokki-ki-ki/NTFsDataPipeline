@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
-const Links = ["Top Selling NFTs", "NFT Transactions", "Streaming"];
+const Links = ["Top Selling NFTs", "NFT Transactions", "Streaming", "Visualizations"];
 const NAV_ITEMS = [
   {
     label: "Top Selling NFTs",
@@ -23,6 +23,10 @@ const NAV_ITEMS = [
   {
     label: "Streaming",
     href: "#",
+  },
+  {
+    label: "Visualizations",
+    href: "visualizations",
   },
 ];
 
