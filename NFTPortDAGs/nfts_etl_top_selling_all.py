@@ -1,5 +1,5 @@
 """
-### NFTs Top 50 selling contract ETL DAG (Monthly)
+### NFTs Top 50 selling contract ETL DAG (All time)
 This DAG is fetch_data_task >> load_to_gcs_task >> load_data_to_bq_task
 """
 # [START import_module]
@@ -9,6 +9,7 @@ import os
 from textwrap import dedent
 import pendulum
 import datetime
+from dotenv import load_dotenv
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
@@ -17,6 +18,9 @@ from airflow.providers.google.cloud.transfers.gcs_to_bigquery import GCSToBigQue
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from nfts_top_selling_fetch import FetchTopSellingNFTs
 # [END import_module]
+load_dotenv()
+credential=os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential
 
 # Define global variable for current datetime
 current_datetime = datetime.datetime.now()
@@ -25,7 +29,7 @@ current_datetime = datetime.datetime.now()
 def fetch_data():
     
     fetch_data = FetchTopSellingNFTs()
-    fetch_data.fetch_nfts("30d")
+    fetch_data.fetch_nfts("all")
 
 nfts_schema = [
     # TODO: better define the schema
@@ -43,7 +47,7 @@ nfts_schema = [
 # [START define dag]
 with DAG(
     # TODO: configuration for the dag
-    'nfts_top_selling_etl_monthly',
+    'nfts_top_selling_etl_all_time',
     default_args={'retries': 2},
     description='DAG draft for group project',
     schedule_interval='@daily',
@@ -69,7 +73,7 @@ with DAG(
     load_to_gcs_task = LocalFilesystemToGCSOperator(
         task_id='transform',
         src="/tmp/fetch_nfts_top.csv",
-        dst=f"data/fetch_nfts_top_monthly{current_datetime}.csv",
+        dst=f"data/fetch_nfts_top_all{current_datetime}.csv",
         bucket="nftport_bucket",
         mime_type="text/csv",
         dag=dag
@@ -85,8 +89,8 @@ with DAG(
     load_data_to_bq_task = GCSToBigQueryOperator(
         task_id='load_to_bq',
         bucket="nftport_bucket",
-        source_objects=[f"data/fetch_nfts_top_monthly{current_datetime}.csv"],
-        destination_project_dataset_table="nftport_pipeline.nftport_monthly",
+        source_objects=[f"data/fetch_nfts_top_all{current_datetime}.csv"],
+        destination_project_dataset_table="nftport_pipeline.nftport_all_time",
         source_format="CSV",
         allow_quoted_newlines = True,
         write_disposition="WRITE_TRUNCATE",

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "nft-dashboard-381202",
+  "private_key_id": "58bb0cbf1a690fc3efdb11661a63ce5ec9c02f4c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDcwzRTtAerreIx\niL4qigw0fFa0HBCRKquB7X6N5WoDX81CQzJ8pddSoyvmeU5MIcjF0M6U6jSJWKVy\nF702nIEmxgqOZDzi6js6Uvtcfl2xS0xRF0oPg8tKfSLeUhdd6Iupu2mnQeHylhVb\neMkWEqCdoa+ocBFpXVMTgEAn6hbaZZqEzbIBvkJ2VNQj5k/lw5XgxQkbigWqbVJE\nphurETyEw7v3R9xyYakD7TjI52shqbF56cANNXh9AjEs/cu9E8M7+POmsR12buks\nunMTJcOyh6kfdakWDOSMZieRa0f0x+HhyXGZYU+9lwsM1ikJ4bPrNxPiz1Hsf3Hw\n0pKtbRnBAgMBAAECggEAAnunFmRtXCjY5RP7yJR0KfB2lLDGnm1fj7btQBkTGc3d\nbAf/tL90RiuL6jwVzX0pShFMy4e9Vsiilr+N2yQEP1yFoJ+fwDEggKnPhjUtJln5\nliVoCbfipNg2uM+tT9r2XC69k9oluZHm1Fgt0dPcjt1TUZaOGZRpQ2xDPHexcVwj\nFkgYqLIZHth8fgy46Tfw3KtOwoKYQF1XLdAA3r6A4LMX9lIWXb+l6V73MURTx4EZ\n4l9oru+7E+TERuNX49OBRWjBGuKUj7SMWaewkVYJFROiNacnJIZpc5BSivcvVeEi\nL03Fs1r7NVKwo57Q3T3K+lnqsBbFx2psFB+AvdOEgQKBgQD+QjBiq+C/fmsYZwqY\ne3OvZuAQKF7GrrhBilIv3f9VuzThY5sb0F9Hu/W8XR3wneUNnimvdI5UHDCbQvx/\ndTiDqt2y1FW0UTsg7bbc0uDyHpfXIUnRfvbWOJElviGbnJzVKaquZ/LrNYVD+nO6\nlwrKcbStBvB9/v90QDO57tV1YQKBgQDeRkjDnw4nQjJ2DJMlOXtT4RzIC2ZeeJJG\n+6SPdvwRAAGqYEIGR3J1EgFGbDbcSx0b26X/i7PbXA3TVOMHt8PyGzv7GOFmAd7O\nS+/YDfZFfftxK+6HWLpKl3WjN7UOefQRYtSoJYRAC/JcTQyywlDHpm8R5liwAQ1i\nsZc1tI+gYQKBgCrVudMVw9JfGOnOikFwIug8+6idNIJicxZPmFMKIncuB9Wk8z+3\nViX+q4KlaWLdJvapW7p8d3ICIco2edV7SR8djSYQkbPEL6L3iWQgftcrgkczC32o\n1yr18rYaFw1hUCa1U1T4nDs2FBKEwjSAN8gtadPwpFmFuUG7gzti2kFhAoGAM/Ey\nwdwif5QdnK6VmEZVhqV9h1X6pyr/6+yUaR5CC2r3+Kuj4jnCCo+Zkq5pJ5O6Cq+K\nnCw2bJWXeYJFx6Du/l3U53nJ+n+HZKgkNVYV7elh3/GHPUPDzPiV+f1jpy1ilsmE\nroKN5DWmfmFXDVMRc4Z2QDWXFhI44Y5kqp02TyECgYBadY9KS/pIOH1hnboa8aj5\nXfCJjMKzYxb77KNOTBWaASp4yTDygEFqt8m4ElijVYZJwOb/ta0L8OF5BnE9m5/C\nIfiHZQholzY/J1zabrbfIpIvIPCxtL4ztm7T+0fTXr4YUzDvXBFHPVNTu2spMqHX\ndQg85kt5/Kbq/0rShVS3UA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "project-3107-credential@nft-dashboard-381202.iam.gserviceaccount.com",
+  "client_id": "111106533489108970153",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/project-3107-credential%40nft-dashboard-381202.iam.gserviceaccount.com"
+}

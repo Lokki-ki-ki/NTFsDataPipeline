@@ -14,7 +14,7 @@ from airflow.utils.task_group import TaskGroup
 from airflow.operators.python import PythonOperator
 from airflow.providers.google.cloud.operators.bigquery import BigQueryExecuteQueryOperator, BigQueryCreateEmptyTableOperator, BigQueryCreateEmptyDatasetOperator
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from NFTPort.nfts_top_selling_fetch import FetchTopSellingNFTs
+from NFTPortDAGs.nfts_top_selling_fetch import FetchTopSellingNFTs
 from gcloud_helper import GoogleHelper
 # [END import_module]
 
