@@ -5,3 +5,5 @@
 /.ipynb_checkpoints
 /Analytics/.ipynb_checkpoints
 __pycache__
+/CryptoDAGs/__pycache__
+NFTTransDAGs/__pycache__
