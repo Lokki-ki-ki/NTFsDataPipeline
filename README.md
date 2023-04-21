@@ -8,6 +8,9 @@ Tools that can assist buyers, sellers, and investors in navigating the complicat
 
 In general, an NFT Dashboard can enable consumers easily traverse the complicated world of NFTs and offer a valuable service to the expanding NFT market.
 
+## Pipeline Design
+![alt text](https://github.com/Lokki-ki-ki/NTFsDataPipeline/blob/main/nft-dashboard/public/IS3107_pipeline_design.png)
+
 ## Stack
 1. Alchemy NFT API
 2. Yahoo Finance API
