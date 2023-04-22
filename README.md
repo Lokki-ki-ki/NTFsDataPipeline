@@ -23,17 +23,28 @@ In general, an NFT Dashboard can enable consumers easily traverse the complicate
 9. Flask
 10. Pandas
 
+## Instructions
+### Instructions for running our DAGs
+#### Step 1 - Pls clone this repo under your airflow/dags/, then the airflow would be able to detect this folder
 
-### Tips for running our dags
-### Step1 - Pls clone this repo under your airflow/dags/, then the airflow would be able to detect this folder
-
-### Step2 - Before run the dag, please auth your google cloud. 
+#### Step 2 - Before run the dag, please auth your google cloud. 
 If don't have gcloud cli, please install and follwoing Local development environmen in the link https://cloud.google.com/docs/authentication/provide-credentials-adc#how-to. 
 (For our grp member)Once initiate gcloud successfully, can use `gcloud projects list` and `gcloud config set project nft-dashboard-381202` to set the proj to our current proj.
 (For non-admin)use `export GOOGLE_APPLICATION_CREDENTIALS='nft-dashboard-381202-0f0a9018c1a0.json'` in gcloud cli to use our service account.
 
-### Step3 - Run the dags test
+#### Step 3 - Run the dags test
 `airflow dags test project_initialize` and `airflow dags test nfts_price_etl_hourly` currently the dag_id is airlflow_draft can you can check the data under gcs/nfts_pipeline_test and bigquery/nfts_pipeline
+
+### Instructions for running Downstream Application - Dashboard
+#### Web Access
+https://Lokki-ki-ki.github.io/NTFsDataPipeline 
+
+#### Running on localhost
+Clone this repository. You will need npm installed globally on your machine. After cloning, please run the following command to download the required React dependencies from ```package.json```. ```npm install```
+
+To run the project on the frontend, run ```npm start``` in the project directory.
+
+
 
 ### Other Tips
 More details of the Project can be found here: 
