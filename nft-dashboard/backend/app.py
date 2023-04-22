@@ -122,5 +122,27 @@ def get_nft_rank_monthly():
     # Return data as JSON
     return jsonify(data)
 
+@app.route('/nft_data')
+def get_nft_data():
+    client = bigquery.Client()
+    query = """
+        SELECT *
+        FROM `nft-dashboard-381202.nfts_pipeline.nfts_pipeline_collection_Cryptopunks`
+        UNION ALL
+        SELECT *
+        FROM `nft-dashboard-381202.nfts_pipeline.nfts_pipeline_collection_Mutant_Alien_Ape_Yacht_Club`
+        UNION ALL
+        SELECT *
+        FROM `nft-dashboard-381202.nfts_pipeline.nfts_pipeline_collection_Perky_Platypus`
+        UNION ALL
+        SELECT *
+        FROM `nft-dashboard-381202.nfts_pipeline.nfts_pipeline_collection_Pudgy_Penguins`
+        ORDER BY price
+    """
+    nft_data = client.query(query).to_dataframe()
+    return jsonify(nft_data.to_dict())
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
